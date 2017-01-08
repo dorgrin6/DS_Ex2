@@ -110,6 +110,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="TwoThreeNode.cpp" />
+    <ClCompile Include="TwoThreeTree.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TwoThreeNode.h" />
+    <ClInclude Include="TwoThreeTree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
