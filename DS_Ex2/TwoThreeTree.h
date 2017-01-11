@@ -2,24 +2,26 @@
 #define TWOTHREETREE
 
 #include <list>
-#include "TwoThreeNode.h"
+#include "Node.h"
+#include "LeafNode.h"
 using  namespace std;
 
 
 class TwoThreeTree {
-	list<TwoThreeNode::Student> leaves; // list of all leaves in structure
-	TwoThreeNode *root; // root of tree
-
+	list<LeafNode::Student> leaves; // list of all leaves in structure
+	Node *root; // root of tree
 
 
 public:
 	TwoThreeTree():root(nullptr){}
 	
-	void insertNode(TwoThreeNode &toInsert);
+	bool insertNode(Node *toInsert);
 
-	void deleteNode(TwoThreeNode &toInsert);
+	bool deleteNode(Node *toInsert);
 
-	void findNode(TwoThreeNode &toFind);
+	LeafNode* findNode(int key);
+
+	LeafNode* findNodeRec(Node * root, int key);
 
 	void print();
 

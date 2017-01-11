@@ -21,7 +21,7 @@
     <ClCompile Include="TwoThreeTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TwoThreeNode.cpp">
+    <ClCompile Include="Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +29,13 @@
     <ClInclude Include="TwoThreeTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TwoThreeNode.h">
+    <ClInclude Include="Node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InternalNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LeafNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
