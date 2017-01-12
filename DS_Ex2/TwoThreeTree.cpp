@@ -1,13 +1,10 @@
 #include "TwoThreeTree.h"
 
 bool TwoThreeTree::insertNode(KeyType key,DataType *data){
-	bool res;
+	bool res = false;
 
 	LeafNode *newLeaf;
 	InternalNode *newInternal;
-	InternalNode *parent;
-
-
 
 	//tree is empty
 	if (root == nullptr){
@@ -16,9 +13,9 @@ bool TwoThreeTree::insertNode(KeyType key,DataType *data){
 	}
 
 	//tree is a leaf
-	if (root->isLeaf()){
+	else if (root->isLeaf()){
 		if (key == root->asLeaf()->key){
-			cout << "The key wasn't found\n";
+			printKeyExists(false);
 			return false;
 		}
 		
@@ -46,30 +43,48 @@ bool TwoThreeTree::insertNode(KeyType key,DataType *data){
 		root = newInternal;
 		return true;
 	}
-	else{//tree has internal nodes (more than one leaf)
-		parent = findParent(key);
-		newLeaf = findLeafWithKey(key, parent);
-		if (newLeaf == nullptr){
-			//insert node with key to tree
+
+	//tree has internal nodes (more than one leaf)
+	else { res = insertNodeToTree(key, data); }
+	return res;
+}
+
+
+
+bool TwoThreeTree::insertNodeToTree(KeyType key, DataType *data){
+	InternalNode *parent= findParent(key);
+	LeafNode *newLeaf = findLeafWithKey(key, parent);
+
+	if (newLeaf == nullptr) {	
+		//insert node with key to tree
+		//case 2: node has 3 children
+		if (parent->hasRight()){
+			
 		}
-		else{
-			cout << "key was found\n";
-			return false;
+		else{ //case 1: node has 2 children
+			if (key < parent->left->asLeaf()->key){
+				
+			}
+
 		}
+
 	}
-	return false;
+	else {//key already in tree
+		printKeynotFound();
+		return false;
+	}
 }
 
 LeafNode* TwoThreeTree::findLeafWithKey(KeyType key, InternalNode* parent){
 	
-	if (parent->right != nullptr && key == parent->min3) {
+	if (parent->hasRight() && key == parent->min3) {
 		return root->asInternal()->right->asLeaf();
 	}
 	else if (key == parent->min2) {
-		return root->asLeaf();
+		root->asInternal()->mid->asLeaf();
 	}
 	else if (key == parent->min1 ){
-		return root->asLeaf();
+		return root->asInternal()->left->asLeaf();
 	}
 
 	return nullptr;
@@ -89,7 +104,7 @@ DataType* TwoThreeTree::findNode(KeyType key){
 		if (root->asLeaf()->key == key)
 			return &(root->asLeaf()->data);
 		else {
-			cout << "The key wasn't found\n";
+			printKeynotFound();
 			return nullptr;
 		}
 	}
@@ -100,7 +115,7 @@ DataType* TwoThreeTree::findNode(KeyType key){
 	keyNode = findLeafWithKey(key, parent);
 
 	if (keyNode == nullptr){
-		cout << "The key wasn't found\n";
+		printKeynotFound();
 		return nullptr;
 	}
 

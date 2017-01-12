@@ -10,6 +10,7 @@ int main(){
 	t.insertNode(2013333, &idan);
 	t.insertNode(20133331, &dor);
 
+	t.print();
 
 
 

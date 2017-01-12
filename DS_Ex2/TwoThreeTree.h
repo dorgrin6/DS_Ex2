@@ -7,6 +7,7 @@
 #include "InternalNode.h"
 #include <iostream>
 using  namespace std;
+class Node;
 class LeafNode;
 class InternalNode;
 
@@ -29,9 +30,24 @@ public:
 	InternalNode *findParent(int key);
 
 
+
+
 	LeafNode* findNodeRec(Node * root, int key);
 
 	bool insertNode(KeyType key, DataType * data);
+
+	bool insertNodeToTree(KeyType key, DataType * data);
+
+	void printKeynotFound() const{
+		cout <<"Key wasn't found\n";
+	}
+
+	void printKeyExists(bool exists) const {
+		if (exists)
+			cout << "Key already exist\n";
+		else
+			cout << "Key does not exist\n";
+	}
 
 	void print();
 

@@ -14,6 +14,10 @@ public:
 
 	virtual void print()const{}
 
+
+	bool hasRight() const {
+		return (right != nullptr);
+	}
 };
 
 #endif
