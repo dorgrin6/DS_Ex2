@@ -1,24 +1,26 @@
 
 #ifndef _LEAF_NODE_H_
 #define  _LEAF_NODE_H_
-#include <string>
-using namespace std;
 #include "Node.h"
+#include <iostream>
+#include <list>
 
 class LeafNode : public Node {
-	friend TwoThreeTree;
-	//private data student
-	class Student {
-		int id = 0;
-		string name = "";
-		float average = 0;
-	};
+	KeyType key;
+	DataType data;
+
+	list<Student>::iterator position;
 
 
-	virtual bool isLeaf() const{
-		return true;
+	friend class TwoThreeTree;
+public:
+
+	LeafNode(KeyType _key,DataType _data):key(_key),data(_data){}
+
+
+	virtual void print()const{
+		cout << data;
 	}
-
 
 };
 

@@ -1,22 +1,35 @@
+
 #ifndef _NODE_H_
 #define _NODE_H_
 
+#include "Student.h"
 
-class TwoThreeTree;
+class LeafNode;
+class InternalNode;
+typedef int KeyType;
+typedef Student DataType;
+
+
 
 class Node {
-	int key;
 	Node *parent;
-	
+
+	friend class TwoThreeTree;
 public:
-	friend TwoThreeTree;
-	Node(int _key=0,Node* _parent=nullptr):key(_key),parent(_parent){}
 
-	virtual bool isLeaf()= 0;
+	Node(Node* _parent = nullptr) :parent(_parent) {}
 
+	
+	bool isLeaf() const {
+		return typeid(*this) == typeid(LeafNode);
+	}
+	
+	virtual void print()const = 0;
 
+	LeafNode* asLeaf();
+
+	InternalNode* asInternal();
 };
-
 #endif
 
 
