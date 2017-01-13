@@ -8,6 +8,7 @@ class LeafNode;
 class InternalNode;
 typedef int KeyType;
 typedef Student DataType;
+#define emptyKey 0 
 
 
 
@@ -16,13 +17,14 @@ class Node {
 
 	friend class TwoThreeTree;
 public:
-
+	//CTOR
 	Node(Node* _parent = nullptr) :parent(_parent) {}
 
-	
-	bool isLeaf() const {
-		return typeid(*this) == typeid(LeafNode);
-	}
+	//isLeaf: returns 'true' if node is leaf, 'false' else
+	virtual bool isLeaf() const = 0;
+
+	//isInternal: returns 'true' if node is internal, 'false' else
+	virtual bool isInternal() const = 0;
 	
 	virtual void print()const = 0;
 

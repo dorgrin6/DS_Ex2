@@ -14,9 +14,14 @@ class LeafNode : public Node {
 
 	friend class TwoThreeTree;
 public:
-
+	//CTOR
 	LeafNode(KeyType _key,DataType _data):key(_key),data(_data){}
 
+	//isLeaf: returns 'true' if node is leaf, 'false' else
+	virtual bool isLeaf() const { return true; }
+
+	//isInternal: returns 'true' if node is internal, 'false' else
+	virtual bool isInternal() const { return false; }
 
 	virtual void print()const{
 		cout << data;
