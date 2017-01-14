@@ -16,7 +16,6 @@ class Node {
 
 	friend class TwoThreeTree;
 public:
-
 	Node(Node* _parent = nullptr) :parent(_parent) {}
 
 	

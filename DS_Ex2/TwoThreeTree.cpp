@@ -9,6 +9,9 @@ bool TwoThreeTree::insertNode(KeyType key,DataType *data){
 	//tree is empty
 	if (root == nullptr){
 		root = new LeafNode(key,*data);
+		root->asLeaf()->position = leaves.begin();
+		leaves.push_back(root->asLeaf());
+
 		return  true;
 	}
 
@@ -176,7 +179,6 @@ void TwoThreeTree::print(){
 	list<LeafNode*>::const_iterator iter;
 
 	for (iter = leaves.begin(); iter != leaves.end(); ++iter) {
-		cout << *iter << " ";
+		cout << *iter;
 	}
-	cout << endl;
 }

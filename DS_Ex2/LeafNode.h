@@ -9,7 +9,7 @@ class LeafNode : public Node {
 	KeyType key;
 	DataType data;
 
-	list<Student>::iterator position;
+	list<LeafNode*>::iterator position;
 
 
 	friend class TwoThreeTree;
@@ -20,6 +20,11 @@ public:
 
 	virtual void print()const{
 		cout << data;
+	}
+
+	friend ostream& operator<< (ostream& os, const LeafNode* node) {
+		os << node->data;
+		return os;
 	}
 
 };
