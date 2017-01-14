@@ -23,9 +23,11 @@ public:
 	//isInternal: returns 'true' if node is internal, 'false' else
 	virtual bool isInternal() const { return false; }
 
+	//print: prints the data inside the leaf
 	virtual void print()const{
 		cout << data;
 	}
+
 
 };
 

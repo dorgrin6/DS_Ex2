@@ -3,6 +3,8 @@
 
 #include "Node.h"
 
+enum Child {Left, Mid, Right, Empty};
+
 class InternalNode : public Node {
 	Node *left, *mid, *right;
 	int min1,min2, min3;
@@ -19,8 +21,24 @@ public:
 	//isInternal: returns 'true' if node is internal, 'false' else
 	virtual bool isInternal() const { return true; }
 
+	//hasRightChild: return 'true' if InternalNode has the right child, therefore it has 3 children. 'false' else
+	bool hasRightChild()const {
+		return (right == nullptr ? false : true);
+	}
+
+	//hasOneChild: return 'true' if InternalNode has only one child (=the left child), 'false' else
+	bool hasOneChild()const {
+		if (mid == nullptr && right == nullptr)
+			return true;
+		else
+			return false;
+	}
+
+	//print: nothing
 	virtual void print()const{}
 
+	//replaceChild: replacing the child in 'toDelete' with the child 'toReplace'
+	void replaceChild(Child toDelete, Child toReplace);
 };
 
 #endif

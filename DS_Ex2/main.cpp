@@ -10,11 +10,15 @@ int main(){
 	Student yuval(250, "yuval", 90);
 	Student yossi(275, "yossi", 95);
 	Student dor(300, "dor", 100);
+	Student roni(350, "roni", 65);
 	Student gadi(400, "gadi", 60);
 	Student frank(500, "frank", 85);
+	Student gili(600, "gili", 70);
 	Student jay(300, "jay", 60); //fake student
 	
+	
 	TwoThreeTree t;
+
 
 	t.insertNode(idan.getID(), &idan);
 	t.insertNode(dor.getID(), &dor);
@@ -26,6 +30,14 @@ int main(){
 	t.insertNode(yossi.getID(), &yossi);
 	t.insertNode(rami.getID(), &rami);
 	t.insertNode(jay.getID(), &jay); //this suppose to print fail message
+	t.insertNode(gili.getID(), &gili);
+	t.insertNode(roni.getID(), &roni);
+
+
+	t.deleteNode(400);
+	t.deleteNode(300);
+	t.deleteNode(10);
+	t.deleteNode(50);
 	t.print();
 
 
