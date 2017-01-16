@@ -92,9 +92,6 @@ void TwoThreeTree::listInsertBefore(LeafNode *node, leavesIter it){
 }
 
 void TwoThreeTree::listInsertAfter(LeafNode *node, leavesIter it) {
-	if (it == leaves.end()){
-		cout << "UASDDASDASD";
-	}
 	++it;
 	leaves.insert(it, node);
 	--it;

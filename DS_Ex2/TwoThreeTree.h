@@ -38,8 +38,10 @@ public:
 
 	//print: prints whether key exists
 	void printKeyExists(bool exists) const {
-		if (exists)
+		if (exists){
 			cout << "Key already exists\n";
+			exit(1);
+		}
 		else{
 			cout << "Key does not exist\n";
 		}

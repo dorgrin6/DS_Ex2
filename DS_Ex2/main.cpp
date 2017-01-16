@@ -1,6 +1,10 @@
 /*
- *TWOTHREETREE: implementation of 2-3 Tree as presented in class.
- *Insturctions:
+ *	TwoThreeTree: implementation of 2-3 Tree as presented in class.
+ *	Insturctions: insert the amount of numbers to input, then at the following order of each student: 
+ *		ID, name, average.
+ *	Lastly, enter the ID of a student to delete.
+ *	
+ *	 Presenters: Idan Gur and Dor Grinshpan 
  */
 #include "TwoThreeTree.h"
 #include "Student.h"
@@ -24,7 +28,6 @@ int main(){
 
 	cin >> x;
 	//find x, delete it if exists
-	if (t.deleteNode(x)){
-		t.print();
-	}
+	t.deleteNode(x);
+	t.print();
 }
