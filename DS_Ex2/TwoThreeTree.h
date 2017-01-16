@@ -1,4 +1,4 @@
-#ifndef TWOTHREETREE
+﻿#ifndef TWOTHREETREE
 #define TWOTHREETREE
 
 #include <list>
@@ -7,6 +7,9 @@
 #include "InternalNode.h"
 #include <iostream>
 using  namespace std;
+typedef list<LeafNode*>::iterator leavesIter;
+
+
 class Node;
 class LeafNode;
 class InternalNode;
@@ -18,24 +21,48 @@ class TwoThreeTree {
 
 public:
 	//CTOR
-	TwoThreeTree():root(nullptr){}
-
-	//----------------------------------FIND FUNCTIONS----------------------------------
+	TwoThreeTree() :root(nullptr) {}
 
 	//findNode: finds the leaf node with 'key', if exists
 	DataType* findNode(KeyType key);
 
-	//findParent: finds the parent of the leaf node with 'key'
-	InternalNode *findParent(KeyType key);
-
-	//findLeafWithKey: finds which one of the parent's leafs is the one with 'key', if exists
-	LeafNode* findLeafWithKey(KeyType key, InternalNode* parentNode);
-
-	//----------------------------------INSERT FUNCTIONS----------------------------------
-
 	//insertNode: inserts new node with 'key' and 'data' to the tree
 	bool insertNode(KeyType key, DataType * data);
 
+	//deleteNode: deletes the leaf with 'key' from the tree
+	bool deleteNode(KeyType key);
+
+
+	//print: prints leaves list
+	void print();
+
+	//print: prints whether key exists
+	void printKeyExists(bool exists) const {
+		if (exists)
+			cout << "Key already exists\n";
+		else{
+			cout << "Key does not exist\n";
+		}
+	}
+
+	//DTOR
+	~TwoThreeTree() {
+		delete root;
+	}
+
+private:
+	//----------------------------------LIST FUNCTIONS----------------------------------
+	//listInsertBefore: inserts node before iterator it in leaves list
+	void listInsertBefore(LeafNode * node, leavesIter it);
+	
+	//listInsertAfter: inserts node after iterator it in leaves list
+	void listInsertAfter(LeafNode * node, leavesIter it);
+
+	//listInsertToBeginning: inserts node at the beginning of leaves list
+	void listInsertToBeginning(LeafNode* node);
+	
+	
+	//----------------------------------INSERT FUNCTIONS----------------------------------
 	//insertNodeToEmptyTree: handles the insert case when tree is empty
 	bool insertNodeToEmptyTree(KeyType key, DataType* data);
 
@@ -52,7 +79,7 @@ public:
 	void insertLeafToParentWith3Leaves(InternalNode* parentNode, LeafNode* newLeaf);
 
 	//createInternalWith4Children: creates array of 4 nodes, ordered by their keys
-	Node** createInternalWith4Children(InternalNode* parent, Node* newChild, KeyType keyChild);
+	Node** createInternalWith4Children(InternalNode* parent, Node* newChild, KeyType keyChild, int &childIndex);
 
 	//splitChildrenAndAddToTree: splits array of 4 nodes to 2 internal nodes, then inserts them to the tree
 	void splitChildrenAndAddToTree(Node** array4sons, KeyType* array4keys, InternalNode* parentNode);
@@ -64,9 +91,6 @@ public:
 	void updateMin1FromParentToRoot(InternalNode* parentNode, KeyType oldMin1, KeyType newMin1);
 
 	//----------------------------------DELETE FUNCTIONS----------------------------------
-
-	//deleteNode: deletes the leaf with 'key' from the tree
-	bool deleteNode(KeyType key);
 
 	//deleteNodeFromEmptyTree: handles the delete if the tree is empty
 	bool deleteNodeFromEmptyTree(KeyType key);
@@ -95,19 +119,13 @@ public:
 	//resolveParentWithOneChildIsLeft: handles parent who has only 1 child, and he is the 'left' of grandParent
 	void resolveParentWithOneChildIsLeft(InternalNode* parentNode, InternalNode* grandParent);
 
-	//----------------------------------PRINT FUNCTIONS----------------------------------
+	//----------------------------------FIND FUNCTIONS----------------------------------
+	//findParent: finds the parent of the leaf node with 'key'
+	InternalNode *findParent(KeyType key);
 
-	void print();
+	//findLeafWithKey: finds which one of the parent's leafs is the one with 'key', if exists
+	LeafNode* findLeafWithKey(KeyType key, InternalNode* parentNode);
 
-	void printKeyExists(bool exists) const {
-		if (exists)
-			cout << "Key already exist\n";
-		else
-			cout << "Key does not exist\n";
-	}
-
-
-	//TODO: we need to add destructor to kill all the students. yep.
 };
 
 

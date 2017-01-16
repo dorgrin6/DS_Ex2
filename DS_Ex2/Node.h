@@ -3,6 +3,7 @@
 #define _NODE_H_
 
 #include "Student.h"
+#include <iostream>
 
 class LeafNode;
 class InternalNode;
@@ -34,6 +35,9 @@ public:
 
 	//asInternal: cast a node to InternalNode
 	InternalNode* asInternal();
+
+	//DTOR
+	virtual ~Node(){}
 };
 #endif
 

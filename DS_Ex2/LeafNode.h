@@ -7,10 +7,8 @@
 
 class LeafNode : public Node {
 	KeyType key;
+	list<LeafNode*>::iterator position; // position in leaves list
 	DataType data;
-
-	list<Student>::iterator position;
-
 
 	friend class TwoThreeTree;
 public:
@@ -29,6 +27,13 @@ public:
 	}
 
 
+	friend ostream& operator<< (ostream& os, const LeafNode* node) {
+		os << node->data;
+		return os;
+	}
+
+	//DTOR
+	virtual ~LeafNode() {}
 };
 
 #endif

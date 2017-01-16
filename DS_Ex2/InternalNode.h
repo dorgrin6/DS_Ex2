@@ -7,7 +7,7 @@ enum Child {Left, Mid, Right, Empty};
 
 class InternalNode : public Node {
 	Node *left, *mid, *right;
-	int min1,min2, min3;
+	int min1,min2, min3; // min values of nodes in each child
 	friend class TwoThreeTree;
 
 public:
@@ -39,6 +39,20 @@ public:
 
 	//replaceChild: replacing the child in 'toDelete' with the child 'toReplace'
 	void replaceChild(Child toDelete, Child toReplace);
+
+	//DTOR
+	virtual ~InternalNode(){
+		if (left != nullptr){
+			delete left;
+		}
+		if (mid != nullptr){
+			delete mid;
+		}
+		if (right != nullptr){
+			delete right;
+		}
+
+	}
 };
 
 #endif

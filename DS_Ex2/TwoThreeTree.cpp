@@ -26,7 +26,6 @@ DataType* TwoThreeTree::findNode(KeyType key) {
 	keyNode = findLeafWithKey(key, parent);
 
 	if (keyNode == nullptr) {
-		printKeyExists(false);
 		return nullptr;
 	}
 
@@ -83,12 +82,34 @@ bool TwoThreeTree::insertNode(KeyType key,DataType *data){
 	//tree is a rich of leaves (=more than one leaf)
 	else
 		res = insertNodeToRichTree(key, data);
-
+	
 	return res;
 }//insertNode
 
+void TwoThreeTree::listInsertBefore(LeafNode *node, leavesIter it){
+	leaves.insert(it, node);
+	node->position = --it;
+}
+
+void TwoThreeTree::listInsertAfter(LeafNode *node, leavesIter it) {
+	if (it == leaves.end()){
+		cout << "UASDDASDASD";
+	}
+	++it;
+	leaves.insert(it, node);
+	--it;
+	node->position = it;
+}
+
+void TwoThreeTree::listInsertToBeginning(LeafNode *node){
+	leaves.push_front(node);
+	node->position = leaves.begin();
+}
+
+
 bool TwoThreeTree::insertNodeToEmptyTree(KeyType key, DataType* data) {
 	root = new LeafNode(key, *data);
+	listInsertToBeginning(root->asLeaf());
 	return true;
 }//insertNodeToEmptyTree
 
@@ -114,6 +135,7 @@ bool TwoThreeTree::insertNodeToOneLeafTree(KeyType key, DataType* data) {
 		if (root->asLeaf()->key < newLeaf->key) {
 			newInternal->left = root;
 			newInternal->mid = newLeaf;
+			listInsertAfter(newInternal->mid->asLeaf(), newInternal->left->asLeaf()->position); // insert right to left node
 			newInternal->min1 = root->asLeaf()->key;
 			newInternal->min2 = newLeaf->key;
 		}
@@ -122,6 +144,7 @@ bool TwoThreeTree::insertNodeToOneLeafTree(KeyType key, DataType* data) {
 		root's leaf becomes 'mid' and new leaf becomes 'left' of the new internal node */
 		else {
 			newInternal->left = newLeaf;
+			listInsertToBeginning(newInternal->left->asLeaf());
 			newInternal->mid = root;
 			newInternal->min1 = newLeaf->key;
 			newInternal->min2 = root->asLeaf()->key;
@@ -152,6 +175,7 @@ bool TwoThreeTree::insertNodeToRichTree(KeyType key, DataType* data) {
 	else
 	{
 		newLeaf = new LeafNode(key, *data);
+
 		//CASE 1: The parent has 2 leaves
 		if (!(parentNode->hasRightChild()))
 			insertLeafToParentWith2Leaves(parentNode, newLeaf);
@@ -175,6 +199,7 @@ void TwoThreeTree::insertLeafToParentWith2Leaves(InternalNode* parentNode, LeafN
 		parentNode->replaceChild(Mid, Left);
 		parentNode->left = newLeaf;
 		parentNode->min1 = newLeaf->key;
+		listInsertToBeginning(parentNode->left->asLeaf());
 		newMin1 = parentNode->min1;
 		//updating 'min1' from parent up to the root of the tree
 		updateMin1FromParentToRoot(parentNode->parent->asInternal(), oldMin1, newMin1);
@@ -184,11 +209,13 @@ void TwoThreeTree::insertLeafToParentWith2Leaves(InternalNode* parentNode, LeafN
 		parentNode->replaceChild(Right, Mid);
 		parentNode->mid = newLeaf;
 		parentNode->min2 = newLeaf->key;
+		listInsertAfter(parentNode->mid->asLeaf(),parentNode->left->asLeaf()->position);
 	}
 	//the new leaf's key is the highest in its parent
 	else {
 		parentNode->right = newLeaf;
 		parentNode->min3 = newLeaf->key;
+		listInsertAfter(parentNode->right->asLeaf(), parentNode->mid->asLeaf()->position);
 	}
 
 	//updating new leaf parent's
@@ -196,44 +223,63 @@ void TwoThreeTree::insertLeafToParentWith2Leaves(InternalNode* parentNode, LeafN
 	newLeaf->parent = parentNode;
 }//insertLeafToParentWith2Leaves
 
+
 void TwoThreeTree::insertLeafToParentWith3Leaves(InternalNode* parentNode, LeafNode* newLeaf) {
 	Node** array4sons; //holds all 4 children of same internal node
 	KeyType* array4keys; //holds all 4 children's keys of same internal node
-
-	array4sons = createInternalWith4Children(parentNode, newLeaf, newLeaf->key);
+	int childIndex; // index of child
+	array4sons = createInternalWith4Children(parentNode, newLeaf, newLeaf->key,childIndex);
 	array4keys = new KeyType[4];
 	array4keys[0] = array4sons[0]->asLeaf()->key;
 	array4keys[1] = array4sons[1]->asLeaf()->key;
 	array4keys[2] = array4sons[2]->asLeaf()->key;
 	array4keys[3] = array4sons[3]->asLeaf()->key;
+
+	//insert to list
+	if (childIndex == 0){
+		listInsertBefore(array4sons[0]->asLeaf(), array4sons[1]->asLeaf()->position);
+	}
+	else{//childIndex > 0
+		listInsertAfter(array4sons[childIndex]->asLeaf(), array4sons[childIndex-1]->asLeaf()->position);
+	}
+
 	splitChildrenAndAddToTree(array4sons, array4keys, parentNode);
 }//insertLeafToParentWith3Leaves
 
-Node** TwoThreeTree::createInternalWith4Children(InternalNode* parentNode, Node* newChild, KeyType keyChild) {
+Node** TwoThreeTree::createInternalWith4Children(InternalNode* parentNode, Node* newChild, KeyType keyChild,int &childIndex) {
 	Node** array4node = new Node* [4]; //array of 4 parent's children (could be leafs or internals)
 	if (keyChild < parentNode->min1) {
 		array4node[0] = newChild;
 		array4node[1] = parentNode->left;
 		array4node[2] = parentNode->mid;
 		array4node[3] = parentNode->right;
+		childIndex = 0;
+		//listInsertBefore(array4node[0]->asLeaf(), array4node[1]->asLeaf()->position);
 	}
 	else if (keyChild < parentNode->min2) {
 		array4node[0] = parentNode->left;
 		array4node[1] = newChild;
 		array4node[2] = parentNode->mid;
 		array4node[3] = parentNode->right;
+		childIndex = 1;
+		//listInsertAfter(array4node[1]->asLeaf(), array4node[0]->asLeaf()->position);
 	}
 	else if (keyChild < parentNode->min3) {
 		array4node[0] = parentNode->left;
 		array4node[1] = parentNode->mid;
 		array4node[2] = newChild;
 		array4node[3] = parentNode->right;
+
+		childIndex = 2;
+		//listInsertAfter(array4node[2]->asLeaf(), array4node[1]->asLeaf()->position); 
 	}
 	else {
 		array4node[0] = parentNode->left;
 		array4node[1] = parentNode->mid;
 		array4node[2] = parentNode->right;
 		array4node[3] = newChild;
+		childIndex = 3;
+		//listInsertAfter(array4node[3]->asLeaf(), array4node[2]->asLeaf()->position);
 	}
 	return array4node;
 
@@ -242,6 +288,7 @@ Node** TwoThreeTree::createInternalWith4Children(InternalNode* parentNode, Node*
 void TwoThreeTree::splitChildrenAndAddToTree(Node** array4sons, KeyType* array4keys, InternalNode* parentNode) {
 	InternalNode* newInternal = new InternalNode();
 	InternalNode* newRoot;
+	int childIndex;
 
 	//arrange lower 2 childern in parentNode
 	attachSonsToParent(parentNode, array4sons, array4keys);
@@ -276,12 +323,13 @@ void TwoThreeTree::splitChildrenAndAddToTree(Node** array4sons, KeyType* array4k
 		}
 		//parent of parentNode have also 3 children, so we need to do this process all over again
 		else {
-			array4sons = createInternalWith4Children(parentNode->parent->asInternal(), newInternal, newInternal->min1);
+			array4sons = createInternalWith4Children(parentNode->parent->asInternal(), newInternal, newInternal->min1,childIndex);
 			array4keys = new KeyType[4];
 			array4keys[0] = array4sons[0]->asInternal()->min1;
 			array4keys[1] = array4sons[1]->asInternal()->min1;
 			array4keys[2] = array4sons[2]->asInternal()->min1;
 			array4keys[3] = array4sons[3]->asInternal()->min1;
+
 			splitChildrenAndAddToTree(array4sons, array4keys, parentNode->parent->asInternal());
 		}	
 	}
@@ -316,7 +364,7 @@ void TwoThreeTree::updateMin1FromParentToRoot(InternalNode* parentNode, KeyType 
 //----------------------------------DELETE FUNCTIONS----------------------------------
 
 bool TwoThreeTree::deleteNode(KeyType key) {
-	bool res = false;
+	bool res = false; // successful delete
 
 	//tree is empty
 	if (root == nullptr)
@@ -340,6 +388,7 @@ bool TwoThreeTree::deleteNodeFromEmptyTree(KeyType key) {
 
 bool TwoThreeTree::deleteNodeFromOneLeafTree(KeyType key) {
 	if (root->asLeaf()->key == key) {
+		leaves.erase(root->asLeaf()->position); // delete in list
 		delete root;
 		root = nullptr;
 		return true;
@@ -377,6 +426,7 @@ bool TwoThreeTree::deleteNodeFromRichTree(KeyType key) {
 void TwoThreeTree::deleteLeafFromParentWith2Leaves(InternalNode* parentNode, KeyType key) {
 	//deletes the mid
 	if (key == parentNode->min2) {
+		leaves.erase(parentNode->mid->asLeaf()->position); // delete in list
 		delete parentNode->mid;
 		parentNode->replaceChild(Mid, Empty);
 		if (parentNode->hasOneChild())
@@ -384,6 +434,7 @@ void TwoThreeTree::deleteLeafFromParentWith2Leaves(InternalNode* parentNode, Key
 	}
 	//deletes the left
 	else {
+		leaves.erase(parentNode->left->asLeaf()->position); // delete in list
 		delete parentNode->left;
 		parentNode->replaceChild(Left, Mid);
 		parentNode->replaceChild(Mid, Empty);
@@ -397,12 +448,14 @@ void TwoThreeTree::deleteLeafFromParentWith3Leaves(InternalNode* parentNode, Key
 
 	//deletes the right
 	if (key == parentNode->min3) {
+		leaves.erase(parentNode->right->asLeaf()->position); // delete in list
 		delete parentNode->right;
 		parentNode->replaceChild(Right, Empty);
 	}
 
 	//deletes the mid
 	else if (key == parentNode->min2) {
+		leaves.erase(parentNode->mid->asLeaf()->position); // delete in list
 		delete parentNode->mid;
 		parentNode->replaceChild(Mid, Right);
 		parentNode->replaceChild(Right, Empty);
@@ -413,6 +466,7 @@ void TwoThreeTree::deleteLeafFromParentWith3Leaves(InternalNode* parentNode, Key
 	so we need to go up the tree and change the min1 if needed*/
 	else {
 		oldMin1 = parentNode->min1;
+		leaves.erase(parentNode->left->asLeaf()->position); // delete in list
 		delete parentNode->left;
 		parentNode->replaceChild(Left, Mid);
 		parentNode->replaceChild(Mid, Right);
@@ -429,6 +483,7 @@ void TwoThreeTree::resolveParentWithOneChild(InternalNode* parentNode) {
 	//if parentNode is the root of the tree, then his parent (=grandParent) is nullptr
 	if (grandParent == nullptr) {
 		root = parentNode->left;
+		root->parent = nullptr;
 		parentNode->replaceChild(Left, Empty);
 		delete parentNode;
 	}
@@ -590,12 +645,11 @@ LeafNode* TwoThreeTree::findNodeRec(Node *root,int key){
 
 void TwoThreeTree::print(){
 	list<LeafNode*>::const_iterator iter;
-
+	//iterate form back to front
 	for (iter = leaves.begin(); iter != leaves.end(); ++iter) {
-		cout << *iter << " ";
+		cout << *iter;
 	}
 	cout << endl;
 }
-
 
 
