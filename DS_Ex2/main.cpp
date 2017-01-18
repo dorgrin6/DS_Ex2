@@ -18,16 +18,42 @@ int main(){
 	TwoThreeTree t; // tree
 
 	int n; // num of elments in tree
-	cin >> n;
+
+	cin >> n; // insert number of elements
+	if (n < 0){
+		cout << "Amount of numbers can't be negatvie\n";
+		return 1;
+	}
+
+
 	
 	for (int i=0; i<n; i++){
 		cin >> ID >> name >> average;
-		DataType stud(ID, name, average);
-		t.insertNode(ID, &stud);
+		try{
+			DataType stud(ID, name, average);
+			t.insertNode(ID, &stud);
+		}
+		catch(StudentException &e){
+			e.print();
+			return 1;
+		}
+		catch (KeyAlreadyExists &e){
+			e.print();
+			return 1;
+		}
+	}
+	
+	cin >> x;//get number to delete
+	
+	if (x < 0){
+		cout << "Illegal number, no negative numbers in tree\n";
+		return 1;
 	}
 
-	cin >> x;
 	//find x, delete it if exists
-	t.deleteNode(x);
-	t.print();
+	if (t.deleteNode(x) == false){
+		cout << "Key does not exist\n"; //key wasn't found
+	}
+
+	t.print();//print tree leaves
 }

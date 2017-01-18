@@ -15,7 +15,6 @@ DataType* TwoThreeTree::findNode(KeyType key) {
 		if (root->asLeaf()->key == key)
 			return &(root->asLeaf()->data);
 		else {
-			printKeyExists(false);
 			return nullptr;
 		}
 	}
@@ -71,6 +70,7 @@ LeafNode* TwoThreeTree::findLeafWithKey(KeyType key, InternalNode* parentNode) {
 bool TwoThreeTree::insertNode(KeyType key,DataType *data){
 	bool res = false;
 
+	
 	//tree is empty
 	if (root == nullptr)
 		res = insertNodeToEmptyTree(key, data);
@@ -83,6 +83,10 @@ bool TwoThreeTree::insertNode(KeyType key,DataType *data){
 	else
 		res = insertNodeToRichTree(key, data);
 	
+	if (res == false){
+		throw KeyAlreadyExists();
+	}
+
 	return res;
 }//insertNode
 
@@ -117,7 +121,7 @@ bool TwoThreeTree::insertNodeToOneLeafTree(KeyType key, DataType* data) {
 	//the new key is already exists in tree
 	if (key == root->asLeaf()->key)
 	{
-		printKeyExists(true);
+	
 		return false;
 	}
 
@@ -164,7 +168,7 @@ bool TwoThreeTree::insertNodeToRichTree(KeyType key, DataType* data) {
 
 	//the new key is already exists in tree
 	if (existLeaf != nullptr){
-		printKeyExists(true);
+		
 		return false;
 	}
 
@@ -379,7 +383,7 @@ bool TwoThreeTree::deleteNode(KeyType key) {
 }//deleteNode
 
 bool TwoThreeTree::deleteNodeFromEmptyTree(KeyType key) {
-	printKeyExists(false);
+	
 	return false;
 }//deleteNodeFromEmptyTree
 
@@ -391,7 +395,6 @@ bool TwoThreeTree::deleteNodeFromOneLeafTree(KeyType key) {
 		return true;
 	}
 	else {
-		printKeyExists(false);
 		return false;
 	}
 }//deleteNodeFromOneLeafTree
@@ -402,7 +405,6 @@ bool TwoThreeTree::deleteNodeFromRichTree(KeyType key) {
 
 	//the key is not exists in tree
 	if (existLeaf == nullptr) {
-		printKeyExists(false);
 		return false;
 	}
 
@@ -612,37 +614,9 @@ void TwoThreeTree::resolveParentWithOneChildIsLeft(InternalNode* parentNode, Int
 }//resolveParentWithOneChildIsLeft
 
 
-
-/*
-LeafNode* TwoThreeTree::findNodeRec(Node *root,int key){
-	if (root == nullptr) {
-		return nullptr;
-	}
-	else if (root->isLeaf()){
-		return (LeafNode*)root;
-	}
-		
-	else{
-		//root is internal node
-		InternalNode *inRoot = (InternalNode *)root;
-		if (inRoot->right  != nullptr && key >= inRoot->min3){
-			findNodeRec(->right, key);
-		}
-		else if (key>=inRoot->min2){
-			findNodeRec(inRoot->mid, key);
-		}
-		else{
-			findNodeRec(inRoot->left, key);
-		}
-	}
-}
-
-*/
-
-
 void TwoThreeTree::print(){
 	list<LeafNode*>::const_iterator iter;
-	//iterate form back to front
+	//iterate form head to tail
 	for (iter = leaves.begin(); iter != leaves.end(); ++iter) {
 		cout << *iter;
 	}

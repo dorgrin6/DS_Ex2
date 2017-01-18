@@ -44,12 +44,15 @@ public:
 	virtual ~InternalNode(){
 		if (left != nullptr){
 			delete left;
+			left = nullptr;
 		}
 		if (mid != nullptr){
 			delete mid;
+			mid = nullptr;
 		}
 		if (right != nullptr){
 			delete right;
+			right = nullptr;
 		}
 
 	}

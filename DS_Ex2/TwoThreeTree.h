@@ -36,6 +36,7 @@ public:
 	//print: prints leaves list
 	void print();
 
+	/*
 	//print: prints whether key exists
 	void printKeyExists(bool exists) const {
 		if (exists){
@@ -45,7 +46,7 @@ public:
 		else{
 			cout << "Key does not exist\n";
 		}
-	}
+	}*/
 
 	//DTOR
 	~TwoThreeTree() {
